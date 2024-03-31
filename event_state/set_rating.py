@@ -57,7 +57,7 @@ def get_point(user_id):
             return point
 
 
-def get_rating_of_points(update, context):
+def get_rating_of_points_print(update, context):
     with open(POINTS, "r") as points_file:
         points = points_file.readlines()
     rating = ""
@@ -71,6 +71,19 @@ def get_rating_of_points(update, context):
         index += 1
     update.message.reply_text(f"Вас нет в списке рейтинга.")
     return get_state()
+
+
+def get_rating_of_points(update, context):
+    with open(POINTS, "r") as points_file:
+        points = points_file.readlines()
+    rating = ""
+    index = 1
+    for line in points:
+        user_id_from_line, point = line.strip().split(",")
+        if user_id_from_line == str(update.message.chat_id):
+            rating = index
+            return rating
+        index += 1
 
 
 def get_quantity(file):
@@ -107,10 +120,24 @@ def update_rating_plus(user_id, found_player_id):
         try_create_rating_top_5(1, user_id)
 
 
-def send_top_5():
+def send_top_5_survivors():
     with open(RATING, "r") as rating_file:
         top5 = [line.strip().split(',') for line in rating_file.readlines()]
-        print(
+        return (
+            f"Топ 5 выживших:\n"
+            f"1 место - @{get_user_name(top5[0][0])}\n"
+            f"2 место - @{get_user_name(top5[1][0])}\n"
+            f"3 место - @{get_user_name(top5[2][0])}\n"
+            f"4 место - @{get_user_name(top5[3][0])}\n"
+            f"5 место - @{get_user_name(top5[4][0])}\n"
+        )
+
+
+def send_top_5_pointers():
+    with open(POINTS, "r") as rating_file:
+        top5 = [line.strip().split(',') for line in rating_file.readlines()]
+        return (
+            f"Топ 5 по найденным людям:\n"
             f"1 место - @{get_user_name(top5[0][0])}\n"
             f"2 место - @{get_user_name(top5[1][0])}\n"
             f"3 место - @{get_user_name(top5[2][0])}\n"
