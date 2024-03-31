@@ -5,7 +5,7 @@ from config import *
 from event import enter_code, attempt_to_find_target, get_quantity_players_print
 from event_state.admins_on_event import end_event_for_all, stop_event_for_all, continue_event_for_all
 from event_state.players_on_event import start_leave_from_event, leave_from_event, cancel_leave_from_event
-from event_state.set_rating import get_point_print, get_rating_of_points
+from event_state.set_rating import get_point_print, get_rating_of_points_print
 from fast import *
 from menu import try_start_set_username, check_me, commands, stop, get_admins_nicks, rules, \
     try_update_set_username
@@ -71,7 +71,7 @@ conversation_handler = ConversationHandler(
             CommandHandler("check_me", check_me),
             CommandHandler("get_points", get_point_print),
             CommandHandler("get_players", get_quantity_players_print),
-            CommandHandler("get_rating", get_rating_of_points),
+            CommandHandler("get_rating", get_rating_of_points_print),
             # Для игроков
             CommandHandler("try_enter_code", attempt_to_find_target),
             CommandHandler("leave", start_leave_from_event),

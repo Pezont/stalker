@@ -6,7 +6,7 @@ TARGETS = 'event_state/event_data/targets.txt'
 CODES = 'event_state/event_data/codes.txt'
 ENTER_CODES = 'event_state/event_data/enter_codes.txt'
 POINTS = 'event_state/event_data/points.txt'
-RATING = 'event_state/event_data/rating.txt'
+RATING = 'event_state/event_data/rating_survivours.txt'
 with open('config/token.txt', 'r') as token_file:
     TOKEN = token_file.read().strip()
 
