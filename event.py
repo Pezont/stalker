@@ -2,12 +2,13 @@ from icecream import ic
 
 from config import *
 from fast import *
-from nofity import notify_all_players
+from nofity import notify_all_players, notify_all_users
 from event_state.players_on_event import find_player_by_code, find_target_index, remove_player_from_lists, \
     remove_player_from_targets, remove_player_from_enter_codes, get_code, get_next_code, get_next_target
 import random
-from event_state.set_rating import create_points_list, send_top_5, update_rating_plus, get_quantity, get_point_print, \
-    get_rating_of_points
+from event_state.set_rating import create_points_list, send_top_5_survivors, update_rating_plus, get_quantity, \
+    get_point_print, \
+    get_rating_of_points_print, send_top_5_pointers, get_point, get_rating_of_points
 
 
 def create_event(update, context):
@@ -40,7 +41,8 @@ def create_target_list():
     user_id_to_name = {}
 
     with open("event_state/event_data/targets.txt", "w") as file, open("event_state/event_data/enter_codes.txt",
-                                                                       "w") as codes_file, open("event_state/event_data/players.txt", "r") as player_file:
+                                                                       "w") as codes_file, open(
+        "event_state/event_data/players.txt", "r") as player_file:
         players = [line.strip().split(",") for line in player_file]
         event_players = players
         random.shuffle(event_players)
@@ -109,7 +111,7 @@ def enter_code(update, context):
                 text=f"Вас нашли. Теперь ваша роль: Пользователь.\n"
                      f"Проверьте доступные команды с помощью /commands")
             get_point_print(update, context)
-            get_rating_of_points(update, context)
+            get_rating_of_points_print(update, context)
         except Exception as e:
             ic(e)
 
@@ -181,14 +183,12 @@ def close_event(update, context):
             context.user_data[user_id] = {"state": f"{get_state()}"}
             context.bot.send_message(user_id, f"Событие {get_event_name()} окончено.\n"
                                               f"Проверьте доступные команды с помощью /commands")
-            send_top_5()
-            # допилить
-            #
-            #
-            #
-            #
-            #
-            #
-            print(f"{user_id} -- {context.user_data[user_id]}")
+            notify_all_users(send_top_5_survivors(), context)  # топ 5 выживших
+            notify_all_users(send_top_5_pointers(), context)  # топ 5 победителей по очкам
+            with open(PLAYERS, 'r') as players_file:
+                if user_id in players_file.read():
+                    context.bot.send_message(user_id, f"Ваше количество найденных целей: {get_point(user_id)}")
+                    context.bot.send_message(user_id, f"Ваш место по количеству найденных целей: {get_rating_of_points(update, context)}")
+
             clear_file(PLAYERS)
     return get_state()
